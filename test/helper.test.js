@@ -308,4 +308,11 @@ context("deepMerge", () => {
       c: { e: "hi", d: "hi", f: ["hello", "world", "thailand"] },
     })
   })
+  it("should be able to merge object when null", () => {
+    const result = deepMerge({ host: null }, { node: null })
+    result.should.deep.equal({
+      host: null,
+      node: null,
+    })
+  })
 })
