@@ -1,6 +1,7 @@
 const { expect } = require("chai")
 const {
   _censorDeep,
+  _censorURLParameter,
   censor,
   indexDateHalfYear,
   indexDateMonth,
@@ -210,6 +211,32 @@ describe("censor helpers", function () {
         b: cencorString,
         c: { y: cencorString, x: "remain cool" },
       })
+    })
+  })
+
+  context("#_censorURLParameter", function () {
+    it("should be able to censor query params in url", function () {
+      const original = "www.example.com?foo=1&second=2&bar=1"
+      const result = _censorURLParameter(original, "foo")
+      expect(result).to.equal("www.example.com?second=2&bar=1&foo=**CENSORED**")
+    })
+
+    it("should not cersor query params if supplied not match in url", function () {
+      const original = "www.example.com?foo=1&bar=1"
+      const result = _censorURLParameter(original, "ok")
+      expect(result).to.equal(original)
+    })
+
+    it("should return original url when url not have query param", function () {
+      const original = "www.example.com"
+      const result = _censorURLParameter(original, "ok")
+      expect(result).to.equal(original)
+    })
+
+    it("should be able to censor any position of query param", function () {
+      const original = "www.example.com?foo=1&second=2&bar=1"
+      const result = _censorURLParameter(original, "bar")
+      expect(result).to.equal("www.example.com?foo=1&second=2&bar=**CENSORED**")
     })
   })
 })
